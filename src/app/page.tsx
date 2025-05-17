@@ -109,26 +109,8 @@ export default function Home() {
     }
   };
 
-  // Add schema.org markup
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Global Recipe Finder",
-    "description": "AI-powered recipe search engine with semantic understanding",
-    "url": "https://globalrecipefinder.com",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://globalrecipefinder.com/search?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  };
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-emerald-50 to-white dark:from-gray-900 dark:to-gray-800 perspective-1000 transition-colors duration-300">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex justify-end mb-8">
           <button
@@ -471,88 +453,58 @@ export default function Home() {
             )}
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 animate-fade-in">
-              {results.map((recipe, index) => {
-                const recipeSchema = {
-                  "@context": "https://schema.org",
-                  "@type": "Recipe",
-                  "name": recipe.strMeal,
-                  "description": recipe.strInstructions,
-                  "image": recipe.strMealThumb,
-                  "recipeCategory": recipe.strCategory,
-                  "recipeCuisine": recipe.strArea,
-                  "recipeInstructions": recipe.strInstructions,
-                  "recipeYield": "1 serving",
-                  "datePublished": new Date().toISOString()
-                };
-
-                return (
-                  <div key={recipe.idMeal} className="group">
-                    <script
-                      type="application/ld+json"
-                      dangerouslySetInnerHTML={{ __html: JSON.stringify(recipeSchema) }}
-                    />
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:rotate-y-12 hover:translate-z-20">
-                      <Link
-                        href={`/recipe/${recipe.idMeal}`}
-                        className="group"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                        <div className="relative h-56 group">
-                          <img
-                            src={recipe.strMealThumb}
-                            alt={recipe.strMeal}
-                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                          <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <span className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-base font-medium transform hover:translate-z-20 transition-transform duration-300">
-                              {recipe.strCategory}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="p-8">
-                          <h2 className="text-2xl font-semibold text-emerald-900 dark:text-emerald-400 mb-3 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-300 transform hover:translate-z-10">
-                            {recipe.strMeal}
-                          </h2>
-                          <p className="text-lg text-emerald-700 dark:text-emerald-300 mb-6 transform hover:translate-z-10">
-                            {recipe.strArea}
-                          </p>
-                          <div className="flex flex-wrap gap-3">
-                            {recipe.strTags?.split(',').slice(0, 3).map((tag) => (
-                              <span
-                                key={tag}
-                                className="px-4 py-2 bg-emerald-50 dark:bg-gray-700 rounded-full text-base text-emerald-700 dark:text-emerald-300 transform hover:translate-z-10 transition-transform duration-300"
-                              >
-                                {tag.trim()}
-                              </span>
-                            ))}
-                            {recipe.strTags && recipe.strTags.split(',').length > 3 && (
-                              <span className="px-4 py-2 bg-emerald-50 dark:bg-gray-700 rounded-full text-base text-emerald-700 dark:text-emerald-300 transform hover:translate-z-10 transition-transform duration-300">
-                                +{recipe.strTags.split(',').length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </Link>
+              {results.map((recipe, index) => (
+                <Link
+                  key={recipe.idMeal}
+                  href={`/recipe/${recipe.idMeal}`}
+                  className="group"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <article className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:rotate-y-12 animate-card-slide-up">
+                    <div className="relative h-56 group">
+                      <img
+                        src={recipe.strMealThumb}
+                        alt={recipe.strMeal}
+                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span className="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-base font-medium transform hover:translate-z-20 transition-transform duration-300">
+                          {recipe.strCategory}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                    <div className="p-8">
+                      <h2 className="text-2xl font-semibold text-emerald-900 dark:text-emerald-400 mb-3 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-300 transform hover:translate-z-10">
+                        {recipe.strMeal}
+                      </h2>
+                      <p className="text-lg text-emerald-700 dark:text-emerald-300 mb-6 transform hover:translate-z-10">
+                        {recipe.strArea}
+                      </p>
+                      <div className="flex flex-wrap gap-3">
+                        {recipe.strTags?.split(',').slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-4 py-2 bg-emerald-50 dark:bg-gray-700 rounded-full text-base text-emerald-700 dark:text-emerald-300 transform hover:translate-z-10 transition-transform duration-300"
+                          >
+                            {tag.trim()}
+                          </span>
+                        ))}
+                        {recipe.strTags && recipe.strTags.split(',').length > 3 && (
+                          <span className="px-4 py-2 bg-emerald-50 dark:bg-gray-700 rounded-full text-base text-emerald-700 dark:text-emerald-300 transform hover:translate-z-10 transition-transform duration-300">
+                            +{recipe.strTags.split(',').length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              ))}
             </div>
           </div>
         )}
-
-        {/* Add privacy policy link */}
-        <div className="text-center mt-8">
-          <a
-            href="/privacy"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-          >
-            Privacy Policy
-          </a>
-        </div>
-      </div>
+    </div>
     </main>
   );
 }

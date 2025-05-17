@@ -116,30 +116,62 @@ Respond in JSON format:
   }
 }
 
+async function searchDuckDuckGo(query: string) {
+  try {
+    const response = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1&skip_disambig=1`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('DuckDuckGo search error:', error);
+    return null;
+  }
+}
+
 export async function POST(request: Request) {
   try {
-    const { query, searchType } = await request.json();
+    const { query } = await request.json();
 
     if (!query) {
-      return NextResponse.json({ error: 'Search query is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Query is required' }, { status: 400 });
     }
 
-    // Understand search intent using Groq
-    const { searchType: understoodType, correctedQuery, searchTerms, context } = await understandSearchIntent(query);
+    // First try Groq semantic search
+    const searchIntent = await understandSearchIntent(query);
+    
+    if (!searchIntent) {
+      // Fallback to DuckDuckGo
+      const ddgResults = await searchDuckDuckGo(query);
+      if (ddgResults) {
+        return NextResponse.json({
+          results: [],
+          searchInfo: {
+            originalQuery: query,
+            correctedQuery: null,
+            suggestions: {
+              cuisineTypes: [],
+              mealTypes: [],
+              ingredientAlternatives: [],
+              relatedSearches: ddgResults.RelatedTopics?.map((topic: any) => topic.Text) || []
+            }
+          }
+        });
+      }
+      return NextResponse.json({ error: 'Search failed' }, { status: 500 });
+    }
 
     // Use the understood search type if none was specified
-    const finalSearchType = searchType || understoodType;
+    const finalSearchType = searchIntent.searchType;
 
     let endpoint = '';
     switch (finalSearchType) {
       case 'culture':
-        endpoint = `${MEALDB_API_BASE}/filter.php?a=${encodeURIComponent(correctedQuery)}`;
+        endpoint = `${MEALDB_API_BASE}/filter.php?a=${encodeURIComponent(searchIntent.correctedQuery)}`;
         break;
       case 'ingredients':
-        endpoint = `${MEALDB_API_BASE}/filter.php?i=${encodeURIComponent(correctedQuery)}`;
+        endpoint = `${MEALDB_API_BASE}/filter.php?i=${encodeURIComponent(searchIntent.correctedQuery)}`;
         break;
       default:
-        endpoint = `${MEALDB_API_BASE}/search.php?s=${encodeURIComponent(correctedQuery)}`;
+        endpoint = `${MEALDB_API_BASE}/search.php?s=${encodeURIComponent(searchIntent.correctedQuery)}`;
     }
 
     const response = await fetch(endpoint);
@@ -148,7 +180,7 @@ export async function POST(request: Request) {
     // If no results found with corrected query, try alternative search terms
     if (!data.meals || data.meals.length === 0) {
       // Try each search term until we find results
-      for (const term of searchTerms) {
+      for (const term of searchIntent.searchTerms) {
         const altEndpoint = `${MEALDB_API_BASE}/search.php?s=${encodeURIComponent(term)}`;
         const altResponse = await fetch(altEndpoint);
         const altData = await altResponse.json();
@@ -158,17 +190,17 @@ export async function POST(request: Request) {
             results: altData.meals,
             searchInfo: {
               originalQuery: query,
-              correctedQuery,
-              searchTerms,
+              correctedQuery: searchIntent.correctedQuery,
+              searchTerms: searchIntent.searchTerms,
               usedTerm: term,
-              context
+              context: searchIntent.context
             }
           });
         }
       }
 
       // If still no results, try a broader search
-      const broaderEndpoint = `${MEALDB_API_BASE}/search.php?s=${encodeURIComponent(correctedQuery.split(' ')[0])}`;
+      const broaderEndpoint = `${MEALDB_API_BASE}/search.php?s=${encodeURIComponent(searchIntent.correctedQuery.split(' ')[0])}`;
       const broaderResponse = await fetch(broaderEndpoint);
       const broaderData = await broaderResponse.json();
 
@@ -177,10 +209,10 @@ export async function POST(request: Request) {
           results: broaderData.meals,
           searchInfo: {
             originalQuery: query,
-            correctedQuery,
-            searchTerms,
-            usedTerm: correctedQuery.split(' ')[0],
-            context
+            correctedQuery: searchIntent.correctedQuery,
+            searchTerms: searchIntent.searchTerms,
+            usedTerm: searchIntent.correctedQuery.split(' ')[0],
+            context: searchIntent.context
           }
         });
       }
@@ -190,10 +222,10 @@ export async function POST(request: Request) {
         results: [],
         searchInfo: {
           originalQuery: query,
-          correctedQuery,
-          searchTerms,
-          usedTerm: correctedQuery,
-          context
+          correctedQuery: searchIntent.correctedQuery,
+          searchTerms: searchIntent.searchTerms,
+          usedTerm: searchIntent.correctedQuery,
+          context: searchIntent.context
         }
       });
     }
@@ -212,10 +244,10 @@ export async function POST(request: Request) {
         results: detailedMeals,
         searchInfo: {
           originalQuery: query,
-          correctedQuery,
-          searchTerms,
-          usedTerm: correctedQuery,
-          context
+          correctedQuery: searchIntent.correctedQuery,
+          searchTerms: searchIntent.searchTerms,
+          usedTerm: searchIntent.correctedQuery,
+          context: searchIntent.context
         }
       });
     }
@@ -224,10 +256,10 @@ export async function POST(request: Request) {
       results: data.meals,
       searchInfo: {
         originalQuery: query,
-        correctedQuery,
-        searchTerms,
-        usedTerm: correctedQuery,
-        context
+        correctedQuery: searchIntent.correctedQuery,
+        searchTerms: searchIntent.searchTerms,
+        usedTerm: searchIntent.correctedQuery,
+        context: searchIntent.context
       }
     });
 

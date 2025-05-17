@@ -1,33 +1,32 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
-    --background: #ffffff;
-    --foreground: #171717;
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
 }
 
-@theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
-}
-
 @media (prefers-color-scheme: dark) {
-     :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
+    :root {
         --foreground-rgb: 255, 255, 255;
         --background-start-rgb: 0, 0, 0;
         --background-end-rgb: 0, 0, 0;
     }
 }
 
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-inter);
+    --font-mono: var(--font-geist-mono);
+}
+
 body {
     background: var(--background);
     color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-sans), Arial, Helvetica, sans-serif;
     color: rgb(var(--foreground-rgb));
     background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
@@ -36,27 +35,35 @@ body {
     .perspective-1000 {
         perspective: 1000px;
     }
+
     .rotate-y-12 {
         transform: rotateY(12deg);
     }
+
     .rotate-y-180 {
         transform: rotateY(180deg);
     }
+
     .translate-z-10 {
         transform: translateZ(10px);
     }
+
     .translate-z-20 {
         transform: translateZ(20px);
     }
+
     .hover\:rotate-y-12:hover {
         transform: rotateY(12deg);
     }
+
     .hover\:rotate-y-180:hover {
         transform: rotateY(180deg);
     }
+
     .hover\:translate-z-10:hover {
         transform: translateZ(10px);
     }
+
     .hover\:translate-z-20:hover {
         transform: translateZ(20px);
     }
@@ -66,6 +73,7 @@ body {
     from {
         width: 0;
     }
+
     to {
         width: 100%;
     }
@@ -81,6 +89,7 @@ body {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -91,6 +100,7 @@ body {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -102,6 +112,7 @@ body {
         opacity: 0;
         transform: translateY(20px) translateZ(0);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) translateZ(0);
@@ -113,6 +124,7 @@ body {
         opacity: 0;
         transform: translateY(40px) translateZ(0);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) translateZ(0);
@@ -123,6 +135,7 @@ body {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }

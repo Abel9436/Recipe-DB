@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    images: {
+        domains: ['www.themealdb.com'],
+    },
     async headers() {
         return [{
             source: '/:path*',
             headers: [{
                     key: 'Content-Security-Policy',
-                    value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://api.groq.com https://www.themealdb.com;"
+                    value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://www.youtube-nocookie.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.themealdb.com; font-src 'self' data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com;"
                 },
                 {
                     key: 'X-Content-Type-Options',
@@ -22,14 +25,10 @@ const nextConfig = {
                 {
                     key: 'Referrer-Policy',
                     value: 'strict-origin-when-cross-origin'
-                },
-                {
-                    key: 'Permissions-Policy',
-                    value: 'camera=(), microphone=(), geolocation=()'
                 }
             ]
-        }]
+        }];
     }
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -134,9 +134,9 @@ export default function RecipeDetail() {
                   </div>
                 </div>
 
-                {recipe.strYoutube && (
-                  <div className="transform hover:scale-105 transition-transform duration-300">
-                    <h2 className="text-2xl font-semibold text-emerald-900 mb-4">Video Tutorial</h2>
+                <div className="transform hover:scale-105 transition-transform duration-300">
+                  <h2 className="text-2xl font-semibold text-emerald-900 mb-4">Video Tutorial</h2>
+                  {recipe.strYoutube ? (
                     <div className="aspect-w-16 aspect-h-9 rounded-xl overflow-hidden shadow-lg">
                       <iframe
                         src={recipe.strYoutube.replace('watch?v=', 'embed/')}
@@ -144,10 +144,23 @@ export default function RecipeDetail() {
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         className="w-full h-full"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
                       ></iframe>
+                      <div style={{display: 'none'}} className="w-full h-full flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-lg font-medium">
+                        Video tutorial is unavailable or blocked. <br />
+                        <span className="text-sm">Try opening the recipe on <a href={recipe.strYoutube} target="_blank" rel="noopener noreferrer" className="text-emerald-600 underline ml-1">YouTube</a>.</span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <div className="w-full h-64 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-lg shadow">
+                      <span className="text-gray-600 dark:text-gray-300 text-lg font-medium">No video tutorial available for this recipe.</span>
+                    </div>
+                  )}
+                </div>
 
                 {recipe.strSource && (
                   <div className="transform hover:scale-105 transition-transform duration-300">
