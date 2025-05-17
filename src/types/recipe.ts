@@ -12,6 +12,7 @@ export interface Recipe {
     name: string;
     measure: string;
   }[];
+  embedding?: number[];
 }
 
 export interface SearchFilters {
