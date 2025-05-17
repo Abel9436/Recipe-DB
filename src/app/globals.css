@@ -1,26 +1,187 @@
 @import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+     :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+    .perspective-1000 {
+        perspective: 1000px;
+    }
+    .rotate-y-12 {
+        transform: rotateY(12deg);
+    }
+    .rotate-y-180 {
+        transform: rotateY(180deg);
+    }
+    .translate-z-10 {
+        transform: translateZ(10px);
+    }
+    .translate-z-20 {
+        transform: translateZ(20px);
+    }
+    .hover\:rotate-y-12:hover {
+        transform: rotateY(12deg);
+    }
+    .hover\:rotate-y-180:hover {
+        transform: rotateY(180deg);
+    }
+    .hover\:translate-z-10:hover {
+        transform: translateZ(10px);
+    }
+    .hover\:translate-z-20:hover {
+        transform: translateZ(20px);
+    }
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) translateZ(0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateZ(0);
+    }
+}
+
+@keyframes cardSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px) translateZ(0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) translateZ(0);
+    }
+}
+
+@keyframes spinSlow {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-typing {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid;
+    animation: typing 3.5s steps(40, end), blink .75s step-end infinite;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+.animate-text-slide-up {
+    animation: textSlideUp 0.5s ease-out forwards;
+}
+
+.animate-text-slide-up-delayed {
+    animation: textSlideUp 0.5s ease-out 0.1s forwards;
+    opacity: 0;
+}
+
+.animate-text-slide-up-delayed-2 {
+    animation: textSlideUp 0.5s ease-out 0.2s forwards;
+    opacity: 0;
+}
+
+.animate-text-slide-up-delayed-3 {
+    animation: textSlideUp 0.5s ease-out 0.3s forwards;
+    opacity: 0;
+}
+
+.animate-text-slide-up-delayed-4 {
+    animation: textSlideUp 0.5s ease-out 0.4s forwards;
+    opacity: 0;
+}
+
+.animate-text-slide-up-delayed-5 {
+    animation: textSlideUp 0.5s ease-out 0.5s forwards;
+    opacity: 0;
+}
+
+.animate-text-slide-up-delayed-6 {
+    animation: textSlideUp 0.5s ease-out 0.6s forwards;
+    opacity: 0;
+}
+
+.animate-card-slide-up {
+    animation: cardSlideUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.animate-spin-slow {
+    animation: spinSlow 3s linear infinite;
 }
