@@ -72,3 +72,5 @@ npm start
 ## License
 
 MIT
+
+<!-- Minor fix: Updated README for testing purposes -->
