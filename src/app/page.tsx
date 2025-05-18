@@ -174,7 +174,7 @@ export default function Home() {
 
         <form onSubmit={handleSearch} className="max-w-3xl mx-auto mb-16 animate-slide-up">
           <div className="space-y-4">
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1 group">
                 <input
                   type="text"
@@ -186,20 +186,22 @@ export default function Home() {
                 />
                 <MagnifyingGlassIcon className="h-7 w-7 text-emerald-400 dark:text-emerald-500 absolute left-5 top-1/2 transform -translate-y-1/2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors duration-300" />
               </div>
-              <button
-                type="button"
-                onClick={() => setShowFilters(!showFilters)}
-                className="px-5 py-5 bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300 transform hover:rotate-y-12 hover:translate-z-10"
-              >
-                <AdjustmentsHorizontalIcon className="h-7 w-7" />
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-10 py-5 text-lg bg-emerald-600 dark:bg-emerald-500 text-white rounded-xl hover:bg-emerald-700 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 shadow-sm hover:shadow-lg transform hover:-translate-y-1 hover:rotate-y-12 transition-all duration-300"
-              >
-                Search
-              </button>
+              <div className="flex gap-3 sm:flex-col">
+                <button
+                  type="button"
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex-1 sm:flex-none px-5 py-5 bg-white dark:bg-gray-800 text-emerald-600 dark:text-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 shadow-sm hover:shadow-md transition-all duration-300 transform hover:rotate-y-12 hover:translate-z-10"
+                >
+                  <AdjustmentsHorizontalIcon className="h-7 w-7 mx-auto" />
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 sm:flex-none px-10 py-5 text-lg bg-emerald-600 dark:bg-emerald-500 text-white rounded-xl hover:bg-emerald-700 dark:hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 shadow-sm hover:shadow-lg transform hover:-translate-y-1 hover:rotate-y-12 transition-all duration-300"
+                >
+                  Search
+                </button>
+              </div>
             </div>
 
             <div className={`overflow-hidden transition-all duration-300 ${showFilters ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'}`}>
