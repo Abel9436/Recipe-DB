@@ -83,6 +83,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+        <meta name="google-adsense-account" content="ca-pub-9122247401478241" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
